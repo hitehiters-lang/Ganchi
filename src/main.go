@@ -1,0 +1,59 @@
+package main
+
+import (
+	"fmt"
+	"ganchi_app/additional"
+	"ganchi_app/connection"
+	_ "ganchi_app/docs"
+	"ganchi_app/routers/loaders"
+	"net/http"
+	"os"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
+	httpSwagger "github.com/swaggo/http-swagger"
+)
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @bearerFormat JWT
+// @description Введите JWT токен
+
+// @title Gangchi API
+// @version 1.0
+// @description Документация к API.
+// @BasePath /
+func main() {
+	additional.PrintMessage("Подключаемся к базе данных")
+	db := connection.InitDatabase()
+	if db == nil {
+		os.Exit(1)
+	}
+
+	IPv4 := additional.GetLocalIP()
+
+	r := chi.NewRouter()
+
+	// CORS
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
+
+	r.Get("/api/docs/*", httpSwagger.WrapHandler)
+
+	r.Get("/api/loaders/getall", loaders.GetLoaders)
+	r.Get("/api/loaders/getimage/{loader_id}", loaders.GetLoaderImage)
+
+	port := fmt.Sprintf(":%v", connection.ServerPort)
+
+	additional.PrintSuccess("/", "Стартуем сервер на "+IPv4+port)
+	additional.PrintSuccess("/api/docs/", "Документация доступна по адресу")
+
+	http.ListenAndServe(port, r)
+}

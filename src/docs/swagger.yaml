@@ -1,0 +1,110 @@
+basePath: /
+definitions:
+  models.Loader:
+    properties:
+      autoWeight:
+        type: integer
+      brakeType:
+        type: string
+      chargingTime:
+        type: string
+      engineType:
+        type: string
+      forkLength:
+        type: integer
+      frontWheels:
+        type: string
+      height:
+        type: integer
+      hydraulicLiftingEngine:
+        type: string
+      id:
+        type: integer
+      length:
+        type: integer
+      liftHeight:
+        type: integer
+      liftingAngle:
+        type: integer
+      liftingCylinder:
+        type: string
+      longmenFrameMaterial:
+        type: integer
+      maxLiftWeight:
+        type: integer
+      name:
+        type: string
+      picturePath:
+        type: string
+      price:
+        type: integer
+      rearWheels:
+        type: string
+      steeringMode:
+        type: string
+      turningRadius:
+        type: integer
+      voltage:
+        type: integer
+      wheelAxis:
+        type: string
+      width:
+        type: integer
+      workingHours:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Документация к API.
+  title: Gangchi API
+  version: "1.0"
+paths:
+  /api/loaders/getall:
+    get:
+      consumes:
+      - application/json
+      description: Отправляет всю таблицу с данными о каждом погрузчике
+      operationId: all_loaders
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Loader'
+            type: array
+      summary: Получить все погрузчики
+      tags:
+      - Погрузчики
+  /api/loaders/getimage/{loader_id}:
+    get:
+      consumes:
+      - application/json
+      description: Отправляет всю таблицу с данными о каждом погрузчике
+      operationId: loader_image
+      parameters:
+      - description: ID погрузчика
+        example: "1"
+        in: path
+        name: loader_id
+        required: true
+        type: string
+      produces:
+      - image/jpg
+      - ' image/png'
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: file
+      summary: Получить все погрузчики
+      tags:
+      - Погрузчики
+securityDefinitions:
+  BearerAuth:
+    description: Введите JWT токен
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
