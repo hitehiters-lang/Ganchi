@@ -18,14 +18,14 @@ import (
 // @Success 200 {array} models.Loader
 // @Router /api/loaders/getall [get]
 func GetLoaders(w http.ResponseWriter, r *http.Request) {
-	router := "/api/loaders/getall"
+	var path = r.URL.Path
 	var ctx = context.Background()
 	var db = connection.GetDatabase()
 
 	var loaders []models.Loader
 	err := db.NewSelect().Model(&loaders).Scan(ctx)
 	if err != nil {
-		additional.PrintError(router, err)
+		additional.PrintError(path, err)
 		http.Error(w, `{"error": "loaders not found"}`, http.StatusNotFound)
 		return
 	}
@@ -33,5 +33,5 @@ func GetLoaders(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(loaders)
 
-	additional.PrintSuccess(router, "Погрузчики получены")
+	additional.PrintSuccess(path, "Данные о погрузчиках получены")
 }

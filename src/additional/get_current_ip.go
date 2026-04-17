@@ -1,6 +1,9 @@
 package additional
 
-import "net"
+import (
+	"ganchi_app/config"
+	"net"
+)
 
 func GetLocalIP() string {
 	addrs, err := net.InterfaceAddrs()
@@ -10,7 +13,7 @@ func GetLocalIP() string {
 	for _, addr := range addrs {
 		if ipNet, ok := addr.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
 			if ipNet.IP.To4() != nil {
-				return ipNet.IP.String()
+				return ipNet.IP.String() + config.GetServerPort()
 			}
 		}
 	}

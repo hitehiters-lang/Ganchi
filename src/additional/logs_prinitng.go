@@ -16,8 +16,8 @@ var (
 )
 
 const (
-	timeWidth   = 20
-	ipPathWidth = 40
+	timeWidth   = 15
+	ipPathWidth = 55
 	levelWidth  = 8
 )
 

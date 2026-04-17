@@ -2,10 +2,12 @@ package loaders
 
 import (
 	"context"
+	"errors"
 	"ganchi_app/additional"
 	"ganchi_app/connection"
 	"ganchi_app/models"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -20,17 +22,27 @@ import (
 // @Success 201 {file} binary
 // @Router /api/loaders/getimage/{loader_id} [get]
 func GetLoaderImage(w http.ResponseWriter, r *http.Request) {
+	var path = r.URL.Path
 	var ctx = context.Background()
 	db := connection.GetDatabase()
 
-	router := "/api/loaders/getall"
 	loaderID := chi.URLParam(r, "loader_id")
 
 	var loader models.Loader
-	db.NewSelect().Model(&loader).Where("id = ?", loaderID).Scan(ctx)
+	err := db.NewSelect().Model(&loader).Where("id = ?", loaderID).Scan(ctx)
+	if err != nil {
+		additional.PrintError(path, err)
+		http.Error(w, `{"error":"invalid data"}`, http.StatusBadRequest)
+		return
+	}
+	imagePath := loader.PicturePath
+	_, err = os.Stat(imagePath)
+	if errors.Is(err, os.ErrNotExist) {
+		additional.PrintError(path, err)
+		http.Error(w, `{"error":"picture not exist"}`, http.StatusNotFound)
+		return
+	}
 
-	image := loader.PicturePath
-
-	http.ServeFile(w, r, image)
-	additional.PrintSuccess(router, "Фото погрузчика с ID "+loaderID+" получено")
+	http.ServeFile(w, r, imagePath)
+	additional.PrintSuccess(path, "Фото погрузчика с ID "+loaderID+" получено")
 }

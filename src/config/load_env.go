@@ -1,0 +1,31 @@
+package config
+
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+)
+
+var (
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Database string
+)
+
+func LoadENV() (error, string, string, string, string, string) {
+	err := godotenv.Load(".env")
+	if err != nil {
+		return err, "", "", "", "", ""
+	}
+	Host = os.Getenv("HOST")
+	Port = os.Getenv("DB_PORT")
+	User = os.Getenv("USER")
+	Password = os.Getenv("PASSWORD")
+	Database = os.Getenv("DB_NAME")
+	return err, Host, Port, User, Password, Database
+}
+func GetServerPort() string {
+	return ":" + os.Getenv("SERVER_PORT")
+}

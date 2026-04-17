@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"ganchi_app/additional"
+	"ganchi_app/config"
 
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -11,17 +12,10 @@ import (
 )
 
 var db *bun.DB
-var (
-	Host       string
-	Port       string
-	User       string
-	Password   string
-	Database   string
-	ServerPort string
-)
 
 func InitDatabase() *bun.DB {
-	if err := LoadENV(); err != nil {
+	err, Host, Port, User, Password, Database := config.LoadENV()
+	if err != nil {
 		additional.PrintServerError(err.Error())
 		return nil
 	}
