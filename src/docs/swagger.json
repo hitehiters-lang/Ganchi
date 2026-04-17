@@ -4,7 +4,7 @@
         "description": "Документация к API.",
         "title": "Gangchi API",
         "contact": {},
-        "version": "1.0"
+        "version": "0.1"
     },
     "basePath": "/",
     "paths": {
@@ -22,6 +22,14 @@
                 ],
                 "summary": "Получить все погрузчики",
                 "operationId": "all_loaders",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Языковой код",
+                        "name": "lang",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -37,7 +45,7 @@
         },
         "/api/loaders/getimage/{loader_id}": {
             "get": {
-                "description": "Отправляет всю таблицу с данными о каждом погрузчике",
+                "description": "Отправляет фото погрузчика с указанным id",
                 "consumes": [
                     "application/json"
                 ],
@@ -48,7 +56,7 @@
                 "tags": [
                     "Погрузчики"
                 ],
-                "summary": "Получить все погрузчики",
+                "summary": "Получить фото погрузчика по id",
                 "operationId": "loader_image",
                 "parameters": [
                     {

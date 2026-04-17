@@ -13,8 +13,8 @@ import (
 )
 
 // @Tags Погрузчики
-// @Summary Получить все погрузчики
-// @Description Отправляет всю таблицу с данными о каждом погрузчике
+// @Summary Получить фото погрузчика по id
+// @Description Отправляет фото погрузчика с указанным id
 // @ID loader_image
 // @Accept json
 // @Produce image/jpg, image/png

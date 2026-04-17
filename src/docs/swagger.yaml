@@ -57,7 +57,7 @@ info:
   contact: {}
   description: Документация к API.
   title: Gangchi API
-  version: "1.0"
+  version: "0.1"
 paths:
   /api/loaders/getall:
     get:
@@ -65,6 +65,11 @@ paths:
       - application/json
       description: Отправляет всю таблицу с данными о каждом погрузчике
       operationId: all_loaders
+      parameters:
+      - description: Языковой код
+        in: query
+        name: lang
+        type: string
       produces:
       - application/json
       responses:
@@ -81,7 +86,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Отправляет всю таблицу с данными о каждом погрузчике
+      description: Отправляет фото погрузчика с указанным id
       operationId: loader_image
       parameters:
       - description: ID погрузчика
@@ -98,7 +103,7 @@ paths:
           description: Created
           schema:
             type: file
-      summary: Получить все погрузчики
+      summary: Получить фото погрузчика по id
       tags:
       - Погрузчики
 securityDefinitions:

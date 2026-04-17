@@ -29,6 +29,14 @@ const docTemplate = `{
                 ],
                 "summary": "Получить все погрузчики",
                 "operationId": "all_loaders",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Языковой код",
+                        "name": "lang",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -44,7 +52,7 @@ const docTemplate = `{
         },
         "/api/loaders/getimage/{loader_id}": {
             "get": {
-                "description": "Отправляет всю таблицу с данными о каждом погрузчике",
+                "description": "Отправляет фото погрузчика с указанным id",
                 "consumes": [
                     "application/json"
                 ],
@@ -55,7 +63,7 @@ const docTemplate = `{
                 "tags": [
                     "Погрузчики"
                 ],
-                "summary": "Получить все погрузчики",
+                "summary": "Получить фото погрузчика по id",
                 "operationId": "loader_image",
                 "parameters": [
                     {
@@ -172,7 +180,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
+	Version:          "0.1",
 	Host:             "",
 	BasePath:         "/",
 	Schemes:          []string{},

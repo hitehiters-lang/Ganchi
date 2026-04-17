@@ -21,7 +21,7 @@ import (
 // @description Введите JWT токен
 
 // @title Gangchi API
-// @version 1.0
+// @version 0.1
 // @description Документация к API.
 // @BasePath /
 func main() {
