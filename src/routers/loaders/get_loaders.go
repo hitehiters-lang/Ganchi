@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"ganchi_app/additional"
+	"ganchi_app/config"
 	"ganchi_app/connection"
 	"ganchi_app/models"
 	"net/http"
@@ -98,10 +99,18 @@ func GetLoaders(w http.ResponseWriter, r *http.Request) {
 				loaders[i].WorkingHours = translated
 			}
 		}
+		switch lang {
+		case "en":
+			loaders[i].Price = int(float64(loaders[i].Price) * config.Dol)
+		case "kk":
+			loaders[i].Price = int(float64(loaders[i].Price) * config.Ten)
+		case "zh":
+			loaders[i].Price = int(float64(loaders[i].Price) * config.Yua)
+		}
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(loaders)
 
-	additional.PrintSuccess(path, "Данные о погрузчиках получены")
+	additional.PrintSuccess(path, "Данные о погрузчиках на языке "+lang+" получены")
 }

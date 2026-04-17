@@ -14,6 +14,13 @@ var (
 	Database string
 )
 
+const (
+	Rub float64 = 1
+	Dol float64 = 0.013
+	Ten float64 = 6.2
+	Yua float64 = 0.09
+)
+
 func LoadENV() (error, string, string, string, string, string) {
 	err := godotenv.Load(".env")
 	if err != nil {
