@@ -3,7 +3,8 @@ package models
 type Loader struct {
 	Id                     int    `bun:"id,autoincrement,pk,notnull"`
 	Name                   string `bun:"name,notnull"`
-	PicturePath            string
+	PicturePathWindows     string
+	PicturePathLinux       string
 	MaxLiftWeight          int
 	Length                 int
 	Width                  int

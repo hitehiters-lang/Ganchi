@@ -1,7 +1,6 @@
 package loaders
 
 import (
-	"context"
 	"encoding/json"
 	"ganchi_app/additional"
 	"ganchi_app/config"
@@ -29,9 +28,9 @@ func GetLoaders(w http.ResponseWriter, r *http.Request) {
 		lang = "ru"
 	}
 
-	var path = r.URL.Path
-	var ctx = context.Background()
-	var db = connection.GetDatabase()
+	path := r.URL.Path
+	ctx := r.Context()
+	db := connection.GetDatabase()
 
 	var loaders []models.Loader
 	err := db.NewSelect().Model(&loaders).Scan(ctx)
