@@ -98,6 +98,11 @@ func GetLoaders(w http.ResponseWriter, r *http.Request) {
 				loaders[i].WorkingHours = translated
 			}
 		}
+		if translations, ok := locMap[loaders[i].BatteryType]; ok {
+			if translated, ok := translations[lang]; ok && translated != "" {
+				loaders[i].BatteryType = translated
+			}
+		}
 		switch lang {
 		case "en":
 			loaders[i].Price = int(float64(loaders[i].Price) * config.Dol)

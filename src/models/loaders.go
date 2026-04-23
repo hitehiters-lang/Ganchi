@@ -26,5 +26,6 @@ type Loader struct {
 	ChargingTime           string
 	WorkingHours           string
 	LiftingAngle           int
+	BatteryType            string
 	Price                  int
 }
