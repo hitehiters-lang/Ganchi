@@ -1,4 +1,4 @@
-package loaders
+package manual_loaders
 
 import (
 	"encoding/json"
@@ -9,16 +9,16 @@ import (
 	"net/http"
 )
 
-// @Tags Электрические погрузчики
-// @Summary Получить все погрузчики
+// @Tags Ручные погрузчики
+// @Summary Получить все ручные погрузчики
 // @Description Отправляет всю таблицу с данными о каждом погрузчике
-// @ID all_loaders
+// @ID all_manual_loaders
 // @Accept json
 // @Produce json
 // @Param lang query string false "Языковой код"
-// @Success 200 {array} models.Loader
-// @Router /api/loaders/getall [get]
-func GetLoaders(w http.ResponseWriter, r *http.Request) {
+// @Success 200 {array} models.ManualLoader
+// @Router /api/manual_loaders/getall [get]
+func GetManualLoaders(w http.ResponseWriter, r *http.Request) {
 	lang := r.URL.Query().Get("lang")
 	if lang == "" {
 		lang = "ru"
@@ -32,7 +32,7 @@ func GetLoaders(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	db := connection.GetDatabase()
 
-	var loaders []models.Loader
+	var loaders []models.ManualLoader
 	err := db.NewSelect().Model(&loaders).Scan(ctx)
 	if err != nil {
 		additional.PrintError(path, err)
@@ -58,14 +58,9 @@ func GetLoaders(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i := range loaders {
-		if translations, ok := locMap[loaders[i].EngineType]; ok {
+		if translations, ok := locMap[loaders[i].DriveGear]; ok {
 			if translated, ok := translations[lang]; ok && translated != "" {
-				loaders[i].EngineType = translated
-			}
-		}
-		if translations, ok := locMap[loaders[i].WheelAxis]; ok {
-			if translated, ok := translations[lang]; ok && translated != "" {
-				loaders[i].WheelAxis = translated
+				loaders[i].DriveGear = translated
 			}
 		}
 		if translations, ok := locMap[loaders[i].BrakeType]; ok {
@@ -73,34 +68,9 @@ func GetLoaders(w http.ResponseWriter, r *http.Request) {
 				loaders[i].BrakeType = translated
 			}
 		}
-		if translations, ok := locMap[loaders[i].LiftingCylinder]; ok {
+		if translations, ok := locMap[loaders[i].Control]; ok {
 			if translated, ok := translations[lang]; ok && translated != "" {
-				loaders[i].LiftingCylinder = translated
-			}
-		}
-		if translations, ok := locMap[loaders[i].HydraulicLiftingEngine]; ok {
-			if translated, ok := translations[lang]; ok && translated != "" {
-				loaders[i].HydraulicLiftingEngine = translated
-			}
-		}
-		if translations, ok := locMap[loaders[i].SteeringMode]; ok {
-			if translated, ok := translations[lang]; ok && translated != "" {
-				loaders[i].SteeringMode = translated
-			}
-		}
-		if translations, ok := locMap[loaders[i].ChargingTime]; ok {
-			if translated, ok := translations[lang]; ok && translated != "" {
-				loaders[i].ChargingTime = translated
-			}
-		}
-		if translations, ok := locMap[loaders[i].WorkingHours]; ok {
-			if translated, ok := translations[lang]; ok && translated != "" {
-				loaders[i].WorkingHours = translated
-			}
-		}
-		if translations, ok := locMap[loaders[i].BatteryType]; ok {
-			if translated, ok := translations[lang]; ok && translated != "" {
-				loaders[i].BatteryType = translated
+				loaders[i].Control = translated
 			}
 		}
 		switch lang {

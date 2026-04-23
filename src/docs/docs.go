@@ -25,7 +25,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Погрузчики"
+                    "Электрические погрузчики"
                 ],
                 "summary": "Получить все погрузчики",
                 "operationId": "all_loaders",
@@ -53,15 +53,11 @@ const docTemplate = `{
         "/api/loaders/getimage/{loader_id}": {
             "get": {
                 "description": "Отправляет фото погрузчика с указанным id",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
-                    "image/jpg",
-                    " image/png"
+                    "image/png"
                 ],
                 "tags": [
-                    "Погрузчики"
+                    "Электрические погрузчики"
                 ],
                 "summary": "Получить фото погрузчика по id",
                 "operationId": "loader_image",
@@ -76,8 +72,74 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/manual_loaders/getall": {
+            "get": {
+                "description": "Отправляет всю таблицу с данными о каждом погрузчике",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ручные погрузчики"
+                ],
+                "summary": "Получить все ручные погрузчики",
+                "operationId": "all_manual_loaders",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Языковой код",
+                        "name": "lang",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ManualLoader"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/manual_loaders/getimage/{loader_id}": {
+            "get": {
+                "description": "Отправляет фото погрузчика с указанным id",
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "Ручные погрузчики"
+                ],
+                "summary": "Получить фото ручного погрузчика по id",
+                "operationId": "get_manual_loader_image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "1",
+                        "description": "ID ручного погрузчика",
+                        "name": "loader_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "type": "file"
                         }
@@ -92,6 +154,9 @@ const docTemplate = `{
             "properties": {
                 "autoWeight": {
                     "type": "integer"
+                },
+                "batteryType": {
+                    "type": "string"
                 },
                 "brakeType": {
                     "type": "string"
@@ -138,7 +203,10 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "picturePath": {
+                "picturePathLinux": {
+                    "type": "string"
+                },
+                "picturePathWindows": {
                     "type": "string"
                 },
                 "price": {
@@ -164,6 +232,54 @@ const docTemplate = `{
                 },
                 "workingHours": {
                     "type": "string"
+                }
+            }
+        },
+        "models.ManualLoader": {
+            "type": "object",
+            "properties": {
+                "brakeType": {
+                    "type": "string"
+                },
+                "control": {
+                    "type": "string"
+                },
+                "driveGear": {
+                    "type": "string"
+                },
+                "forkLength": {
+                    "type": "integer"
+                },
+                "forkWidth": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "length": {
+                    "type": "integer"
+                },
+                "liftingSpeed": {
+                    "type": "integer"
+                },
+                "maxLiftWeight": {
+                    "type": "integer"
+                },
+                "maxSpeed": {
+                    "type": "number",
+                    "format": "float64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "picturePathLinux": {
+                    "type": "string"
+                },
+                "picturePathWindows": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
                 }
             }
         }

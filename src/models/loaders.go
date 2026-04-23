@@ -29,3 +29,20 @@ type Loader struct {
 	BatteryType            string
 	Price                  int
 }
+
+type ManualLoader struct {
+	Id                 int    `bun:"id,autoincrement,pk,notnull"`
+	Name               string `bun:"name,notnull"`
+	PicturePathWindows string
+	PicturePathLinux   string
+	MaxLiftWeight      int
+	DriveGear          string
+	Length             int
+	ForkLength         int
+	ForkWidth          int
+	BrakeType          string
+	Control            string
+	MaxSpeed           float64
+	LiftingSpeed       int
+	Price              int
+}

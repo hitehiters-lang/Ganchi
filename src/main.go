@@ -6,6 +6,7 @@ import (
 	"ganchi_app/connection"
 	_ "ganchi_app/docs"
 	"ganchi_app/routers/loaders"
+	"ganchi_app/routers/manual_loaders"
 	"net/http"
 	"os"
 
@@ -49,6 +50,9 @@ func main() {
 
 	r.Get("/api/loaders/getall", loaders.GetLoaders)
 	r.Get("/api/loaders/getimage/{loader_id}", loaders.GetLoaderImage)
+
+	r.Get("/api/manual_loaders/getall", manual_loaders.GetManualLoaders)
+	r.Get("/api/manual_loaders/getimage/{loader_id}", manual_loaders.GetManualLoaderImage)
 
 	additional.PrintSuccess("", "Стартуем сервер на "+IPv4)
 	additional.PrintSuccess("/api/docs/", "Документация доступна по адресу")

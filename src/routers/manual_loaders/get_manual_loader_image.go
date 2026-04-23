@@ -1,4 +1,4 @@
-package loaders
+package manual_loaders
 
 import (
 	"database/sql"
@@ -13,22 +13,22 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-// @Tags Электрические погрузчики
-// @Summary Получить фото погрузчика по id
+// @Tags Ручные погрузчики
+// @Summary Получить фото ручного погрузчика по id
 // @Description Отправляет фото погрузчика с указанным id
-// @ID loader_image
+// @ID get_manual_loader_image
 // @Produce image/png
-// @Param loader_id path string true "ID погрузчика" example(1)
+// @Param loader_id path string true "ID ручного погрузчика" example(1)
 // @Success 200 {file} binary
-// @Router /api/loaders/getimage/{loader_id} [get]
-func GetLoaderImage(w http.ResponseWriter, r *http.Request) {
+// @Router /api/manual_loaders/getimage/{loader_id} [get]
+func GetManualLoaderImage(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	ctx := r.Context()
 	db := connection.GetDatabase()
 
 	loaderID := chi.URLParam(r, "loader_id")
 
-	var loader models.Loader
+	var loader models.ManualLoader
 	err := db.NewSelect().Model(&loader).Where("id = ?", loaderID).Scan(ctx)
 	if errors.Is(err, sql.ErrNoRows) {
 		additional.PrintError(path, err)
