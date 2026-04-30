@@ -5,6 +5,7 @@ import (
 	"ganchi_app/config"
 	"ganchi_app/connection"
 	_ "ganchi_app/docs"
+	"ganchi_app/routers/blog"
 	"ganchi_app/routers/loaders"
 	"ganchi_app/routers/manual_loaders"
 	"net/http"
@@ -15,14 +16,8 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// @securityDefinitions.apikey BearerAuth
-// @in header
-// @name Authorization
-// @bearerFormat JWT
-// @description Введите JWT токен
-
 // @title Gangchi API
-// @version 0.1
+// @version 0.2
 // @description Документация к API.
 // @BasePath /
 func main() {
@@ -53,6 +48,10 @@ func main() {
 
 	r.Get("/api/manual_loaders/getall", manual_loaders.GetManualLoaders)
 	r.Get("/api/manual_loaders/getimage/{loader_id}", manual_loaders.GetManualLoaderImage)
+
+	r.Get("/api/blog/posts", blog.GetPosts)
+	r.Get("/api/blog/posts/{slug}", blog.GetPostBySlug)
+	r.Get("/api/blog/categories", blog.GetCategories)
 
 	additional.PrintSuccess("", "Стартуем сервер на "+IPv4)
 	additional.PrintSuccess("/api/docs/", "Документация доступна по адресу")

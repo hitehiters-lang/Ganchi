@@ -1,5 +1,98 @@
 basePath: /
 definitions:
+  models.BlogAuthor:
+    properties:
+      avatar:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  models.BlogCategory:
+    properties:
+      id:
+        type: integer
+      name:
+        description: заполняется переводом
+        type: string
+      slug:
+        type: string
+    type: object
+  models.BlogPostDetail:
+    properties:
+      author:
+        $ref: '#/definitions/models.BlogAuthor'
+      category:
+        $ref: '#/definitions/models.BlogCategory'
+      content:
+        type: string
+      coverImage:
+        type: string
+      id:
+        type: integer
+      publishedAt:
+        type: string
+      seo:
+        $ref: '#/definitions/models.BlogSEO'
+      slug:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/models.BlogTag'
+        type: array
+      title:
+        type: string
+    type: object
+  models.BlogPostListItem:
+    properties:
+      author:
+        $ref: '#/definitions/models.BlogAuthor'
+      category:
+        $ref: '#/definitions/models.BlogCategory'
+      coverImage:
+        type: string
+      excerpt:
+        type: string
+      id:
+        type: integer
+      publishedAt:
+        type: string
+      slug:
+        type: string
+      title:
+        type: string
+    type: object
+  models.BlogPostResponse:
+    properties:
+      data:
+        $ref: '#/definitions/models.BlogPostDetail'
+    type: object
+  models.BlogPostsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.BlogPostListItem'
+        type: array
+      meta:
+        $ref: '#/definitions/models.PaginationMeta'
+    type: object
+  models.BlogSEO:
+    properties:
+      metaDescription:
+        type: string
+      metaTitle:
+        type: string
+    type: object
+  models.BlogTag:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      slug:
+        type: string
+    type: object
   models.Loader:
     properties:
       autoWeight:
@@ -89,12 +182,120 @@ definitions:
       price:
         type: integer
     type: object
+  models.PaginationMeta:
+    properties:
+      page:
+        type: integer
+      perPage:
+        type: integer
+      total:
+        type: integer
+      totalPages:
+        type: integer
+    type: object
 info:
   contact: {}
   description: Документация к API.
   title: Gangchi API
-  version: "0.1"
+  version: "0.2"
 paths:
+  /api/blog/categories:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает все категории блога с переводом
+      operationId: get_blog_categories
+      parameters:
+      - default: ru
+        description: 'Язык: ru, en, kk, zh'
+        in: query
+        name: lang
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BlogCategory'
+            type: array
+      summary: Получить список категорий
+      tags:
+      - Блог
+  /api/blog/posts:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список статей с пагинацией, фильтрацией по категориям
+        и переводом
+      operationId: get_blog_posts
+      parameters:
+      - default: 1
+        description: Страница
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: На странице
+        in: query
+        name: perPage
+        type: integer
+      - collectionFormat: multi
+        description: Слаги категорий (можно несколько)
+        in: query
+        items:
+          type: string
+        name: category
+        type: array
+      - default: ru
+        description: 'Язык: ru, en, kk, zh'
+        in: query
+        name: lang
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BlogPostsResponse'
+      summary: Получить список статей
+      tags:
+      - Блог
+  /api/blog/posts/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает полную статью с тегами, переводом и SEO
+      operationId: get_blog_post_by_slug
+      parameters:
+      - description: Слаг статьи
+        in: path
+        name: slug
+        required: true
+        type: string
+      - default: ru
+        description: 'Язык: ru, en, kk, zh'
+        in: query
+        name: lang
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BlogPostResponse'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить статью по слагy
+      tags:
+      - Блог
   /api/loaders/getall:
     get:
       consumes:
@@ -183,10 +384,4 @@ paths:
       summary: Получить фото ручного погрузчика по id
       tags:
       - Ручные погрузчики
-securityDefinitions:
-  BearerAuth:
-    description: Введите JWT токен
-    in: header
-    name: Authorization
-    type: apiKey
 swagger: "2.0"
