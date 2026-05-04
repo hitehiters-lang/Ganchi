@@ -28,17 +28,18 @@ type BlogTag struct {
 
 // BlogPost
 type BlogPost struct {
-	ID                 int       `json:"id" bun:"id,pk,autoincrement"`
-	Slug               string    `json:"slug" bun:"slug"`
-	TitleLoc           string    `json:"-" bun:"title_loc"`
-	ExcerptLoc         string    `json:"-" bun:"excerpt_loc"`
-	ContentLoc         string    `json:"-" bun:"content_loc"`
-	CoverImage         string    `json:"coverImage" bun:"cover_image"`
-	PublishedAt        time.Time `json:"publishedAt" bun:"published_at"`
-	CategoryID         *int      `json:"-" bun:"category_id"`
-	AuthorID           *int      `json:"-" bun:"author_id"`
-	MetaTitleLoc       string    `json:"-" bun:"meta_title_loc"`
-	MetaDescriptionLoc string    `json:"-" bun:"meta_description_loc"`
+	ID                     int       `json:"id" bun:"id,pk,autoincrement"`
+	Slug                   string    `json:"slug" bun:"slug"`
+	TitleLoc               string    `json:"-" bun:"title_loc"`
+	ExcerptLoc             string    `json:"-" bun:"excerpt_loc"`
+	ContentLoc             string    `json:"-" bun:"content_loc"`
+	BlogPicturePathWindows string    `json:"blogPicturePathWindows" bun:"blog_picture_path_windows"`
+	BlogPicturePathLinux   string    `json:"blogPicturePathLinux" bun:"blog_picture_path_linux"`
+	PublishedAt            time.Time `json:"publishedAt" bun:"published_at"`
+	CategoryID             *int      `json:"-" bun:"category_id"`
+	AuthorID               *int      `json:"-" bun:"author_id"`
+	MetaTitleLoc           string    `json:"-" bun:"meta_title_loc"`
+	MetaDescriptionLoc     string    `json:"-" bun:"meta_description_loc"`
 
 	// Заполняются переводом
 	Title           string `json:"title" bun:"-"`
@@ -53,28 +54,30 @@ type BlogPost struct {
 
 // BlogPostListItem — для списка
 type BlogPostListItem struct {
-	ID          int           `json:"id"`
-	Slug        string        `json:"slug"`
-	Title       string        `json:"title"`
-	Excerpt     string        `json:"excerpt"`
-	CoverImage  string        `json:"coverImage"`
-	PublishedAt time.Time     `json:"publishedAt"`
-	Category    *BlogCategory `json:"category"`
-	Author      *BlogAuthor   `json:"author"`
+	ID                     int           `json:"id"`
+	Slug                   string        `json:"slug"`
+	Title                  string        `json:"title"`
+	Excerpt                string        `json:"excerpt"`
+	BlogPicturePathWindows string        `json:"blogPicturePathWindows"`
+	BlogPicturePathLinux   string        `json:"blogPicturePathLinux"`
+	PublishedAt            time.Time     `json:"publishedAt"`
+	Category               *BlogCategory `json:"category"`
+	Author                 *BlogAuthor   `json:"author"`
 }
 
 // BlogPostDetail — полная статья
 type BlogPostDetail struct {
-	ID          int           `json:"id"`
-	Slug        string        `json:"slug"`
-	Title       string        `json:"title"`
-	Content     string        `json:"content"`
-	CoverImage  string        `json:"coverImage"`
-	PublishedAt time.Time     `json:"publishedAt"`
-	Category    *BlogCategory `json:"category"`
-	Author      *BlogAuthor   `json:"author"`
-	Tags        []BlogTag     `json:"tags"`
-	SEO         BlogSEO       `json:"seo"`
+	ID                     int           `json:"id"`
+	Slug                   string        `json:"slug"`
+	Title                  string        `json:"title"`
+	Content                string        `json:"content"`
+	BlogPicturePathWindows string        `json:"blogPicturePathWindows"`
+	BlogPicturePathLinux   string        `json:"blogPicturePathLinux"`
+	PublishedAt            time.Time     `json:"publishedAt"`
+	Category               *BlogCategory `json:"category"`
+	Author                 *BlogAuthor   `json:"author"`
+	Tags                   []BlogTag     `json:"tags"`
+	SEO                    BlogSEO       `json:"seo"`
 }
 
 type BlogSEO struct {

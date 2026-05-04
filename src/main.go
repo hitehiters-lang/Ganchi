@@ -52,6 +52,7 @@ func main() {
 	r.Get("/api/blog/posts", blog.GetPosts)
 	r.Get("/api/blog/posts/{slug}", blog.GetPostBySlug)
 	r.Get("/api/blog/categories", blog.GetCategories)
+	r.Get("/api/blog/posts/{slug}/cover", blog.GetBlogCoverImage)
 
 	additional.PrintSuccess("", "Стартуем сервер на "+IPv4)
 	additional.PrintSuccess("/api/docs/", "Документация доступна по адресу")

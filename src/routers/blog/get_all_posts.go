@@ -55,11 +55,10 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		perPage = 100
 	}
 
-	// Получаем все категории: поддерживаем ?category=a&category=b и ?category=a,b,c
+	// Фильтр по категориям
 	categorySlugs := []string{}
 	for _, val := range r.URL.Query()["category"] {
 		if val != "" {
-			// Если передано через запятую — разбиваем
 			for _, slug := range strings.Split(val, ",") {
 				slug = strings.TrimSpace(slug)
 				if slug != "" {
@@ -72,7 +71,6 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 	posts := []models.BlogPost{}
 	query := db.NewSelect().Model(&posts).Order("published_at DESC")
 
-	// Фильтр по категориям
 	if len(categorySlugs) > 0 {
 		query = query.
 			Join("JOIN blog_categories c ON c.id = blog_post.category_id").
@@ -93,7 +91,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Загружаем категории и авторов отдельно + переводим
+	// Загружаем связанные данные + перевод
 	for i := range posts {
 		if posts[i].CategoryID != nil {
 			var cat models.BlogCategory
@@ -112,20 +110,31 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 		localisation.TranslatePost(ctx, &posts[i], lang)
 	}
 
-	// Формируем ответ
+	// Формируем ответ с новыми полями
 	items := make([]models.BlogPostListItem, 0, len(posts))
 	for _, p := range posts {
 		items = append(items, models.BlogPostListItem{
-			ID: p.ID, Slug: p.Slug, Title: p.Title, Excerpt: p.Excerpt,
-			CoverImage: p.CoverImage, PublishedAt: p.PublishedAt,
-			Category: p.Category, Author: p.Author,
+			ID:                     p.ID,
+			Slug:                   p.Slug,
+			Title:                  p.Title,
+			Excerpt:                p.Excerpt,
+			BlogPicturePathWindows: p.BlogPicturePathWindows,
+			BlogPicturePathLinux:   p.BlogPicturePathLinux,
+			PublishedAt:            p.PublishedAt,
+			Category:               p.Category,
+			Author:                 p.Author,
 		})
 	}
 
 	totalPages := int(math.Ceil(float64(total) / float64(perPage)))
 	response := models.BlogPostsResponse{
 		Data: items,
-		Meta: models.PaginationMeta{Page: page, PerPage: perPage, Total: total, TotalPages: totalPages},
+		Meta: models.PaginationMeta{
+			Page:       page,
+			PerPage:    perPage,
+			Total:      total,
+			TotalPages: totalPages,
+		},
 	}
 
 	w.Header().Set("Content-Type", "application/json")

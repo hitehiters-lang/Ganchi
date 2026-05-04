@@ -13,7 +13,7 @@ import (
 )
 
 // @Tags Блог
-// @Summary Получить статью по слагy
+// @Summary Получить статью по слагу
 // @Description Возвращает полную статью с тегами, переводом и SEO
 // @ID get_blog_post_by_slug
 // @Accept json
@@ -83,11 +83,19 @@ func GetPostBySlug(w http.ResponseWriter, r *http.Request) {
 	// Перевод поста
 	localisation.TranslatePost(ctx, &post, lang)
 
+	// Формируем ответ с новыми полями
 	response := models.BlogPostResponse{
 		Data: models.BlogPostDetail{
-			ID: post.ID, Slug: post.Slug, Title: post.Title, Content: post.Content,
-			CoverImage: post.CoverImage, PublishedAt: post.PublishedAt,
-			Category: post.Category, Author: post.Author, Tags: tags,
+			ID:                     post.ID,
+			Slug:                   post.Slug,
+			Title:                  post.Title,
+			Content:                post.Content,
+			BlogPicturePathWindows: post.BlogPicturePathWindows,
+			BlogPicturePathLinux:   post.BlogPicturePathLinux,
+			PublishedAt:            post.PublishedAt,
+			Category:               post.Category,
+			Author:                 post.Author,
+			Tags:                   tags,
 			SEO: models.BlogSEO{
 				MetaTitle:       post.MetaTitle,
 				MetaDescription: post.MetaDescription,
@@ -97,5 +105,5 @@ func GetPostBySlug(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
-	additional.PrintSuccess(path, "Статья "+slug+" получена на языке "+lang)
+	additional.PrintSuccess(path, "Статья '"+slug+"' получена на языке "+lang)
 }

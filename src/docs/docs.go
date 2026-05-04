@@ -120,7 +120,7 @@ const docTemplate = `{
                 "tags": [
                     "Блог"
                 ],
-                "summary": "Получить статью по слагy",
+                "summary": "Получить статью по слагу",
                 "operationId": "get_blog_post_by_slug",
                 "parameters": [
                     {
@@ -143,6 +143,56 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.BlogPostResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/blog/posts/{slug}/cover": {
+            "get": {
+                "description": "Отправляет изображение обложки поста с указанным слагом",
+                "produces": [
+                    "image/png",
+                    "image/jpeg",
+                    "image/webp"
+                ],
+                "tags": [
+                    "Блог"
+                ],
+                "summary": "Получить фото обложки статьи по слагy",
+                "operationId": "get_blog_cover_image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Slug",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     },
                     "404": {
@@ -326,13 +376,16 @@ const docTemplate = `{
                 "author": {
                     "$ref": "#/definitions/models.BlogAuthor"
                 },
+                "blogPicturePathLinux": {
+                    "type": "string"
+                },
+                "blogPicturePathWindows": {
+                    "type": "string"
+                },
                 "category": {
                     "$ref": "#/definitions/models.BlogCategory"
                 },
                 "content": {
-                    "type": "string"
-                },
-                "coverImage": {
                     "type": "string"
                 },
                 "id": {
@@ -364,11 +417,14 @@ const docTemplate = `{
                 "author": {
                     "$ref": "#/definitions/models.BlogAuthor"
                 },
+                "blogPicturePathLinux": {
+                    "type": "string"
+                },
+                "blogPicturePathWindows": {
+                    "type": "string"
+                },
                 "category": {
                     "$ref": "#/definitions/models.BlogCategory"
-                },
-                "coverImage": {
-                    "type": "string"
                 },
                 "excerpt": {
                     "type": "string"

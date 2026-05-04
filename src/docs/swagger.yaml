@@ -23,11 +23,13 @@ definitions:
     properties:
       author:
         $ref: '#/definitions/models.BlogAuthor'
+      blogPicturePathLinux:
+        type: string
+      blogPicturePathWindows:
+        type: string
       category:
         $ref: '#/definitions/models.BlogCategory'
       content:
-        type: string
-      coverImage:
         type: string
       id:
         type: integer
@@ -48,10 +50,12 @@ definitions:
     properties:
       author:
         $ref: '#/definitions/models.BlogAuthor'
+      blogPicturePathLinux:
+        type: string
+      blogPicturePathWindows:
+        type: string
       category:
         $ref: '#/definitions/models.BlogCategory'
-      coverImage:
-        type: string
       excerpt:
         type: string
       id:
@@ -293,7 +297,41 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Получить статью по слагy
+      summary: Получить статью по слагу
+      tags:
+      - Блог
+  /api/blog/posts/{slug}/cover:
+    get:
+      description: Отправляет изображение обложки поста с указанным слагом
+      operationId: get_blog_cover_image
+      parameters:
+      - description: Slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - image/png
+      - image/jpeg
+      - image/webp
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить фото обложки статьи по слагy
       tags:
       - Блог
   /api/loaders/getall:
