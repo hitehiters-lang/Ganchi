@@ -6,6 +6,7 @@ import (
 	"ganchi_app/connection"
 	_ "ganchi_app/docs"
 	"ganchi_app/routers/blog"
+	"ganchi_app/routers/contacts"
 	"ganchi_app/routers/loaders"
 	"ganchi_app/routers/manual_loaders"
 	"net/http"
@@ -55,6 +56,8 @@ func main() {
 	r.Get("/api/blog/posts/{slug}/cover", blog.GetBlogCoverImage)
 	r.Get("/api/blog/posts/{slug}/comments", blog.GetComments)
 	r.Post("/api/blog/posts/{slug}/comments", blog.CreateComment)
+
+	r.Post("/api/contact/send_mail", contacts.ContactUs)
 
 	additional.PrintSuccess("", "Стартуем сервер на "+IPv4)
 	additional.PrintSuccess("/api/docs/", "Документация доступна по адресу")

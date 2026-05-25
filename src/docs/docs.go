@@ -289,6 +289,62 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/contact/send_mail": {
+            "post": {
+                "description": "Отправляет письмо на почту компании",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Связь"
+                ],
+                "summary": "Отправить письмо",
+                "operationId": "contact_us",
+                "parameters": [
+                    {
+                        "description": "Поля ввода",
+                        "name": "contacter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ContactMail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"message\":\"mail sent\"}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "{\"error\": \"bad request\"} {\"error\": \"name required\"} {\"error\": \"bad email format\"} {\"error\": \"content required\"}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error\": \"failed to send mail\"}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/loaders/getall": {
             "get": {
                 "description": "Отправляет всю таблицу с данными о каждом погрузчике",
@@ -627,6 +683,23 @@ const docTemplate = `{
                 },
                 "total": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.ContactMail": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
                 }
             }
         },

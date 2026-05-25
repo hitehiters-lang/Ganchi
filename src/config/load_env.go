@@ -36,3 +36,9 @@ func LoadENV() (error, string, string, string, string, string) {
 func GetServerPort() string {
 	return ":" + os.Getenv("SERVER_PORT")
 }
+func GetEmailData() (email_from, email_to, pass string) {
+	email_from = os.Getenv("CONTACT_MAIL")
+	email_to = os.Getenv("MAIL_TO")
+	pass = os.Getenv("MAIL_PASSWORD")
+	return email_from, email_to, pass
+}

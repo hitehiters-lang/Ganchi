@@ -135,6 +135,17 @@ definitions:
       total:
         type: integer
     type: object
+  models.ContactMail:
+    properties:
+      content:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
   models.Loader:
     properties:
       autoWeight:
@@ -427,6 +438,44 @@ paths:
       summary: Получить фото обложки статьи по слагy
       tags:
       - Блог
+  /api/contact/send_mail:
+    post:
+      consumes:
+      - application/json
+      description: Отправляет письмо на почту компании
+      operationId: contact_us
+      parameters:
+      - description: Поля ввода
+        in: body
+        name: contacter
+        required: true
+        schema:
+          $ref: '#/definitions/models.ContactMail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"message":"mail sent"}'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: '{"error": "bad request"} {"error": "name required"} {"error":
+            "bad email format"} {"error": "content required"}'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: '{"error": "failed to send mail"}'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Отправить письмо
+      tags:
+      - Связь
   /api/loaders/getall:
     get:
       consumes:
