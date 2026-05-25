@@ -10,8 +10,11 @@ import (
 	"net/mail"
 	"strings"
 
+	"golang.org/x/time/rate"
 	"gopkg.in/gomail.v2"
 )
+
+var contact_limiter = rate.NewLimiter(1, 1)
 
 // @Tags Связь
 // @Summary Отправить письмо
@@ -26,6 +29,12 @@ import (
 // @Router /api/contact/send_mail [post]
 func ContactUs(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
+
+	if !contact_limiter.Allow() {
+		additional.PrintError(path, fmt.Errorf("Rate limit hit"))
+		http.Error(w, `{"error":"too many requests"}`, http.StatusTooManyRequests)
+		return
+	}
 
 	var input models.ContactMail
 	err := json.NewDecoder(r.Body).Decode(&input)
@@ -44,13 +53,13 @@ func ContactUs(w http.ResponseWriter, r *http.Request) {
 	if input.Name == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]string{"error": "name required"})
-		additional.PrintError(path, fmt.Errorf("Не было введно имя"))
+		additional.PrintError(path, fmt.Errorf("Не было введено имя"))
 		return
 	}
 	if input.Content == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]string{"error": "content required"})
-		additional.PrintError(path, fmt.Errorf("Не было введно содержание обращения"))
+		additional.PrintError(path, fmt.Errorf("Не было введено содержание обращения"))
 		return
 	}
 	if input.Phone == "" {
