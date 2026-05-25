@@ -104,3 +104,31 @@ type BlogPostResponse struct {
 type BlogCategoriesResponse struct {
 	Data []BlogCategory `json:"data"`
 }
+
+type Comment struct {
+	ID          int       `json:"id" bun:"id,pk,autoincrement"`
+	PostSlug    string    `json:"-" bun:"post_slug"`
+	ParentID    *int      `json:"parentId" bun:"parent_id"`
+	AuthorName  string    `json:"name" bun:"author_name"`
+	AuthorEmail string    `json:"-" bun:"author_email"` // скрыт в ответе
+	Content     string    `json:"content" bun:"content"`
+	CreatedAt   time.Time `json:"createdAt" bun:"created_at"`
+	IsApproved  bool      `json:"-" bun:"is_approved"` // не отдаём клиенту напрямую
+
+	// Вложенные комментарии (заполняются при сборке дерева)
+	Replies []Comment `json:"replies,omitempty" bun:"-"`
+}
+
+// CommentCreateRequest — тело запроса на создание
+type CommentCreateRequest struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Content  string `json:"content"`
+	ParentID *int   `json:"parentId"`
+}
+
+// CommentResponse — плоский список для API
+type CommentResponse struct {
+	Comments []Comment `json:"comments"`
+	Total    int       `json:"total"`
+}

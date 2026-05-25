@@ -97,6 +97,44 @@ definitions:
       slug:
         type: string
     type: object
+  models.Comment:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      parentId:
+        type: integer
+      replies:
+        description: Вложенные комментарии (заполняются при сборке дерева)
+        items:
+          $ref: '#/definitions/models.Comment'
+        type: array
+    type: object
+  models.CommentCreateRequest:
+    properties:
+      content:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      parentId:
+        type: integer
+    type: object
+  models.CommentResponse:
+    properties:
+      comments:
+        items:
+          $ref: '#/definitions/models.Comment'
+        type: array
+      total:
+        type: integer
+    type: object
   models.Loader:
     properties:
       autoWeight:
@@ -298,6 +336,61 @@ paths:
               type: string
             type: object
       summary: Получить статью по слагу
+      tags:
+      - Блог
+  /api/blog/posts/{slug}/comments:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает плоский список всех комментариев с parentId
+      operationId: get_post_comments
+      parameters:
+      - description: Слаг статьи
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CommentResponse'
+      summary: Получить комментарии к статье
+      tags:
+      - Блог
+    post:
+      consumes:
+      - application/json
+      description: Добавляет новый комментарий (требует модерации)
+      operationId: create_post_comment
+      parameters:
+      - description: Слаг статьи
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Данные комментария
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/models.CommentCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Создать комментарий к статье
       tags:
       - Блог
   /api/blog/posts/{slug}/cover:

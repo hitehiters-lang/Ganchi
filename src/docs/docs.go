@@ -157,6 +157,88 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/blog/posts/{slug}/comments": {
+            "get": {
+                "description": "Возвращает плоский список всех комментариев с parentId",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Блог"
+                ],
+                "summary": "Получить комментарии к статье",
+                "operationId": "get_post_comments",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Слаг статьи",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.CommentResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Добавляет новый комментарий (требует модерации)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Блог"
+                ],
+                "summary": "Создать комментарий к статье",
+                "operationId": "create_post_comment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Слаг статьи",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Данные комментария",
+                        "name": "comment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CommentCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Comment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/blog/posts/{slug}/cover": {
             "get": {
                 "description": "Отправляет изображение обложки поста с указанным слагом",
@@ -487,6 +569,64 @@ const docTemplate = `{
                 },
                 "slug": {
                     "type": "string"
+                }
+            }
+        },
+        "models.Comment": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
+                },
+                "replies": {
+                    "description": "Вложенные комментарии (заполняются при сборке дерева)",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Comment"
+                    }
+                }
+            }
+        },
+        "models.CommentCreateRequest": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CommentResponse": {
+            "type": "object",
+            "properties": {
+                "comments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Comment"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
